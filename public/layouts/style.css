@@ -3,3 +3,6 @@
 	margin: 20px 0;
 	line-height: 1.9em;
 }
+li{
+	list-style: none;
+}
