@@ -200,3 +200,23 @@ exports.update = function(req, res, next){
   });
   workflow.emit('validate');
 };
+
+exports.delete = function(req, res, next){
+  var workflow = req.app.utility.workflow(req, res);
+  // console.log(req.params.id);
+  workflow.on('validate', function() {
+    workflow.emit('deleteEvent');
+  });
+
+  workflow.on('deleteEvent', function(err) {
+    req.app.db.models.Event.findByIdAndRemove(req.params.id, function(err, event) {
+      if (err) {
+        return workflow.emit('exception', err);
+      }
+      req.flash('success', "Event Deleted.");
+      res.location('/myevents');
+      res.redirect('/myevents');
+    });
+  });
+  workflow.emit('validate');
+};
